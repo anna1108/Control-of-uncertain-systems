@@ -5,27 +5,27 @@ clear all
 Parameter_CSI;
 
 %% Mu-analysis
-%% Modello nominale
+%% Nominal model
 G = tf(sys*G_act);
 G = G_tot;
 
 s = tf('s');
 
-%% Pesi sull'incertezza
+%% Uncertainty weights
 WI = WI_tot;
 
-%% Pesi sulle performance
+%% Performance weights
 
-% Definizione dei parametri per le funzioni peso
+% Definition of weight function parameters
 A_dk  = 1e-4;
 M_dk  = 1.5;
 wB_dk_phi = 0.1;
 wB_dk_psi = 0.01;
 
-% Matrice di peso per le prestazioni, sulla S
+% Performance weight matrix for S
 wP_dk_phi = 1/100 * (s/M_dk + wB_dk_phi)/(s + wB_dk_phi*A_dk);
 wP_dk_psi = 1/100 * (s/M_dk + wB_dk_psi)/(s + wB_dk_psi*A_dk);
-WP = blkdiag(wP_dk_phi, wP_dk_psi); % Matrice diagonale di peso per S
+WP = blkdiag(wP_dk_phi, wP_dk_psi); % Diagonal weight matrix for S
 
 %% Generalized plant P by using 
 
@@ -62,26 +62,26 @@ legendEntries = {};
 
 for k = 1:2
 
-% STEP 1: trovare un controllore ottimo H infinito
+% STEP 1: find an optimal H-infinity controller
 [K, Nsc, gamma, info] = hinfsyn(D*P/D, nmeas, nu,'method','lmi','Tolgam', 1e-3);
 
 Nf = frd(lft(P,K),omega);
 
-% STEP 2: calcolare mu usando l'upper bound
+% STEP 2: compute mu using the upper bound
 [mubnds,Info] = mussv(Nf, blk);
 bodemag(mubnds(1,1), omega);
 murp = norm(mubnds(1,1), inf,1e-6);
 
-legendEntries{end+1} = sprintf('\\mu al passo %d', k); 
+legendEntries{end+1} = sprintf('\\mu at step %d', k);
 
-% STEP 3: fit della D ricavata
+% STEP 3: fit the derived D
 [VDelta,VSigma] = mussvextract(Info);
 VSigma.DLeft = VSigma.DLeft/VSigma.DLeft(3,3);
 d1 = fitmagfrd(VSigma.DLeft(1,1),4);              % fit 4th ordine a fase minima
 hold on
 grid on
 
-% Ritorn allo STEP 1 
+% Return to STEP 1
 D = append(d1,d1,tf(eye(2)),tf(eye(2)));
 
 end

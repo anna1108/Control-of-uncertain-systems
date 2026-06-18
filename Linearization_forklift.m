@@ -1,11 +1,11 @@
-% Variabili simboliche
+% Symbolic variables
 syms y_sym theta_sym phi_sym psi_sym phi_dot_sym psi_dot_sym vx_sym rp_sym L_sym a_sym b_sym c_phi_sym c_psi_sym Ipz_sym Ipy_sym tau_phi_sym tau_psi_sym phi_dot_dot_sym psi_dot_dot_sym
 
-% Definizione stato e ingressi
+% State and input definition
 z = [y_sym theta_sym phi_dot_sym psi_sym psi_dot_sym];
 u = [tau_phi_sym tau_psi_sym];
 
-% Equilibrio
+% Equilibrium
 zeq = [0 0 vx_sym/rp_sym 0 0];
 ueq = [c_phi_sym*phi_dot_sym 0];
 
@@ -16,17 +16,17 @@ z_dot = [rp_sym*phi_dot_sym*sin(theta_sym)*cos(psi_sym);
          psi_dot_sym;
          (tau_psi_sym+Ipz_sym*(rp_sym/L_sym)*phi_dot_dot_sym*sin(psi_sym)+Ipz_sym*(rp_sym/L_sym)*psi_dot_sym*phi_dot_sym*cos(psi_sym)-c_psi_sym*psi_dot_sym)/Ipz_sym];
 
-% Derivate
+% Partial derivatives (Jacobians)
 Alin = jacobian(z_dot,z);
 Blin = jacobian(z_dot,u);
 
-% Sostituisco equilibrio
+% Substitute equilibrium point
 
 Aeq = subs(Alin,z,zeq);
 Aeq = subs(Aeq,[phi_dot_dot_sym,psi_dot_dot_sym],[0 0]);
 Beq = subs(Blin,z,zeq);
 
-% % Matrici con valori dei parametri
+% % Matrices with numerical parameter values
 % 
 % Areal = double(subs(Aeq, [rp_sym, a_sym, b_sym, Ipz_sym, Ipy_sym, c_phi_sym, c_psi_sym, L_sym, vx_sym, phi_dot_dot_sym, psi_dot_dot_sym], ...
 %                        [0.3, 19.1667, 2.8575, 0.23, 0.15, 0.01, 0.02, 1, 10, 0, 0]));

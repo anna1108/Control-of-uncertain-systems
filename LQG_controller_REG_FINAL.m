@@ -14,49 +14,49 @@ Zmm = zeros(m,m);
 Znn = zeros(n,n); 
 Zmn = zeros(m,n);
 
-%% 1) Design del controllore (regolatore) in feedback
-% aumento l'impianto con gli integratori
+%% 1) Feedback regulator design
+% augment plant with integrators
 Alqg = [a Znm;-c Zmm]; 
 Blqg = [b;-d];             
 
-Q = 1e-2 * [Znn Znm;Zmn eye(m,m)];                 % peso o errore integrato
-R = 0.01 * eye(m);                                 % peso sull'ingresso
+Q = 1e-2 * [Znn Znm;Zmn eye(m,m)];                 % weight on integrated error
+R = 0.01 * eye(m);                                 % weight on input
 
-Kr = lqr(Alqg,Blqg,Q,R);                           % regolatore ottimo in feedback
+Kr = lqr(Alqg,Blqg,Q,R);                           % optimal feedback regulator
 
-% estraggo l'integratore e il feedback sullo stato
+% extract integrator and state feedback gains
 Krp = Kr(1:m,1:n); 
 Kri = Kr(1:m,n+1:n+m);   
 
-%% 2) Design del filtro di Kalman            
-Bnoise = eye(n);                                            % modello del rumore di processo (Gd)
-W = 20 * eye(size(Bnoise, 2));                                   % disturbo di processo
-V = 0.1 * eye(p);                                               % rumore di misura
+%% 2) Kalman filter design
+Bnoise = eye(n);                                            % process noise model (Gd)
+W = 20 * eye(size(Bnoise, 2));                                   % process disturbance
+V = 0.1 * eye(p);                                               % measurement noise
 sys_tot_nom_noise = ss(a, [b Bnoise], c, [d zeros(p,n)]);
-[kalmfss, Ke, P] = kalman(sys_tot_nom_noise, W, V);         % guadagno del filtro di Kalman
+[kalmfss, Ke, P] = kalman(sys_tot_nom_noise, W, V);         % Kalman filter gain
 
 
-%% 3) Controllore da [r y]’ a u (2 DOF) e da -y a u (1 DOF)
-%Considero anche gli integratori
+%% 3) Controller from [r y]’ to u (2 DOF) and from -y to u (1 DOF)
+% Include integrators
 Ac = [Zmm Zmn; -b*Kri a-b*Krp-Ke*c];           
 Bcr = [eye(m); Znm]; 
 Bcy=[-eye(m); Ke];
 Cc = [-Kri -Krp]; 
 Dcr = Zmm; 
 Dcy = Zmm;
-Klqg2 = ss(Ac,[Bcr Bcy],Cc,[Dcr Dcy]);      % Controllore a 2 g.d.l. da [r y]' a u
-Klqg = ss(Ac,-Bcy,Cc,-Dcy);                 % Parte in feedback del controllore da -y a u
+Klqg2 = ss(Ac,[Bcr Bcy],Cc,[Dcr Dcy]);      % 2-DOF controller from [r y]' to u
+Klqg = ss(Ac,-Bcy,Cc,-Dcy);                 % feedback part of controller from -y to u
 Klqg_tf = minreal(tf(Klqg));
 
-%% Simulazione con il rumore di processo
-% simulazione 1 g.d.l.
-CL = feedback(G_tot_nom*Klqg, eye(p)); 
+%% Simulation with process noise
+% 1-DOF simulation
+CL = feedback(G_tot_nom*Klqg, eye(p));
 
-% simulazione 2 g.d.l.
+% 2-DOF simulation
 CL2 = (feedback(G_tot_nom*Klqg2, eye(p), [3 4], [1 2], +1));  
 sys2 = CL2;
 
-%sforzo di controllo 2 g.d.l.
+% 2-DOF control effort
 CL2u = feedback(Klqg2, G_tot_nom, [3 4], [1 2], +1); 
 sys2u = CL2u; 
 
@@ -66,14 +66,14 @@ hold on
 grid on
 step(sys2(1,1));
 hold on
-legend('1 g.d.l.','2 g.d.l.')
+legend('1 DOF','2 DOF')
 
 figure
 step(CL(2,2));
 hold on 
 grid on
 step(sys2(2,2));
-legend('1 g.d.l.','2 g.d.l.')
+legend('1 DOF','2 DOF')
 
 
 
