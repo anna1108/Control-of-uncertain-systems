@@ -42,8 +42,8 @@ S_lqg_struct_sc = loopsens(sys_tot_nom, K_lqg_sc);
 S_lqg_o_sc = (S_lqg_struct_sc.So);
 T_lqg_o_sc = (S_lqg_struct_sc.To);
 % Compute S_lqg peak
-picco_S_lqg_o_sc = hinfnorm(S_lqg_o_sc);
-picco_T_lqg_o_sc = hinfnorm(T_lqg_o_sc);
+peak_S_lqg_o_sc = hinfnorm(S_lqg_o_sc);
+peak_T_lqg_o_sc = hinfnorm(T_lqg_o_sc);
 
 %-----PLOT 2-----
 G_u_lqg_sc = (K_lqg_sc * S_lqg_o_sc);

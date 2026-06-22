@@ -20,7 +20,7 @@ WP_mix = blkdiag(wP_mix_phi, wP_mix_psi); % Diagonal weight matrix for S
 
 [K_mix, CL_mix, gamma_mix, info] = mixsyn(G_tot_nom, WP_mix);
 
-gamma_mix;   % Visualizzo il valore del picco 
+gamma_mix;   % Display peak value
 
 K_mix        = (K_mix);
 K_mix_tf = tf(K_mix);
@@ -29,13 +29,13 @@ RL_nom_K_mix = (sys_tot_nom*K_mix);
 sys_c_K_mix  = (feedback(RL_nom_K_mix, eye(p)));
 G_c_K_mix    = (tf(sys_c_K_mix));
 
-% Calcolo di S
+% Compute S
 S_mix_struct = loopsens(sys_tot_nom, K_mix);
 S_mix_o = (S_mix_struct.So);
 T_mix_o = (S_mix_struct.To);
 
-poli_sys_cl_K_mix = pole(sys_c_K_mix);
-zeri_sys_cl_K_mix = tzero(sys_c_K_mix); 
+poles_sys_cl_K_mix = pole(sys_c_K_mix);
+zeros_sys_cl_K_mix = tzero(sys_c_K_mix);
 
 %-----PLOT 1-----
 % Closed-loop response plot

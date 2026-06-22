@@ -52,8 +52,8 @@ S_hinfsyn_struct = loopsens(sys_tot_nom, K_hinfsyn);
 S_hinfsyn_o = (S_hinfsyn_struct.So);
 T_hinfsyn_o = (S_hinfsyn_struct.To);
 
-poli_sys_cl_K_hinfsyn = pole(sys_c_K_hinfsyn);
-zeri_sys_cl_K_hinfsyn = tzero(sys_c_K_hinfsyn); 
+poles_sys_cl_K_hinfsyn = pole(sys_c_K_hinfsyn);
+zeros_sys_cl_K_hinfsyn = tzero(sys_c_K_hinfsyn);
 
 %-----PLOT 1-----
 % Closed-loop response plot

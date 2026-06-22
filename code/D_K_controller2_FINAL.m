@@ -47,7 +47,7 @@ P = connect(G, WI, WP, Sum1,Sum2,Sum3, {'ud','w','u'},{'yd','z1','e'});
 
 %% D-K iteration
 
-% Inizializzazione
+% Initialization
 blk = [1 1;1 1;2 2];
 nmeas = 2; 
 nu = 2; 
@@ -77,7 +77,7 @@ legendEntries{end+1} = sprintf('\\mu at step %d', k);
 % STEP 3: fit the derived D
 [VDelta,VSigma] = mussvextract(Info);
 VSigma.DLeft = VSigma.DLeft/VSigma.DLeft(3,3);
-d1 = fitmagfrd(VSigma.DLeft(1,1),4);              % fit 4th ordine a fase minima
+d1 = fitmagfrd(VSigma.DLeft(1,1),4);              % fit 4th order minimum phase
 hold on
 grid on
 

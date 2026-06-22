@@ -9,6 +9,7 @@ d = 0.3;            %[m] front semi-axle
 vx = 1;             %[m/s] equilibrium velocity along x
 
 R_rear_nom = 0.3;       %[m] rear wheel radius
+Rp_nom = R_rear_nom;    %[m] alias expected by Simulink models
 R_rear = ureal('R_rear', R_rear_nom, 'Percentage', 5);
 
 R_front_nom = 0.3;       %[m] front wheel radius
@@ -165,8 +166,8 @@ Bnom = B.NominalValue;
 
 sys_nom = (ss(Anom, Bnom, C, D));
 G_sys_nom = (tf(sys_nom));
-poli_sys = pole(G_sys_nom);
-zeri_sys = tzero(G_sys_nom);
+poles_sys = pole(G_sys_nom);
+zeros_sys = tzero(G_sys_nom);
 
 %% Forward-path system: actuators and nominal system
 G_tot_nom = (G_sys_nom*tf(G_act_nom)); % nominal overall transfer function
