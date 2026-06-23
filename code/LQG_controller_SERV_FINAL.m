@@ -21,6 +21,7 @@ QI = 0.01 * eye(p);
 % compute the LQG servo-controller (1 DOF) using the 'lqg' command
 K_lqg_sc = lqg(sys_tot_nom, Q_QR, Q_WV, QI, '1dof');
 K_lqg_sc = minreal(K_lqg_sc);
+Klqg = K_lqg_sc;
 Klqg_tf = minreal(tf(K_lqg_sc));
 
 %% Simulation

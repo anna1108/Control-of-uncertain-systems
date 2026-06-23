@@ -41,6 +41,7 @@ P_hinfsyn = connect(G, WP_hinfsyn, Sum1,Sum3,...
 gamma_hinfsyn;   % Display peak value
 
 K_hinfsyn        = (K_hinfsyn);
+K_mix = K_hinfsyn;
 K_hinfsyn_tf = tf(K_hinfsyn);
 
 RL_nom_K_hinfsyn = (sys_tot_nom*K_hinfsyn);
