@@ -26,7 +26,7 @@ The observed outputs are the lateral position y and the rear wheel angular veloc
 Two sources of uncertainty are considered:
 
 **1. Parametric uncertainty (system)**  
-The rear and front wheel radii R_p and R_a are modeled as `ureal` objects with ±5% variation. The resulting uncertainty structure is an 8×8 diagonal matrix Δ_G extracted via `lftdata`.
+The rear and front wheel radii R_p and R_a are modeled as `ureal` objects with ±5% variation. The resulting uncertainty structure is an 8×8 diagonal matrix extracted via `lftdata`.
 
 **2. Actuator uncertainty**  
 Each actuator is modeled with a multiplicative input uncertainty:
@@ -52,7 +52,7 @@ Two implementations are provided:
 - **Regulator with integral action** (`LQG_controller_REG_FINAL.m`): plant augmented with integrators, gains computed via `lqr` + `kalman`.
 - **Servo-controller** (`LQG_controller_SERV_FINAL.m`): designed directly with MATLAB's `lqg` command, available in both 1-DOF and 2-DOF configurations.
 
-The μ-analysis reveals that the LQG controller is nominally performant (μ_NP ≈ 0.14) but not robustly stable or performant under the full uncertainty set (μ_RS ≈ 9.37, μ_RP ≈ 9.39).
+The μ-analysis reveals that the LQG controller is nominally performant but not robustly stable or performant under the full uncertainty set.
 
 <p align="center">
   <img src="figures/mu analisi LQG.png" width="500" alt="μ-analysis LQG"/>
@@ -71,7 +71,7 @@ Two synthesis methods are implemented:
 - **`mixsyn`** (`Hinf_controller_FINAL.m`): standard mixed-sensitivity formulation
 - **`hinfsyn` + `connect`** (`Hinf_controller_hinfsyn_FINAL.m`): explicit generalized plant construction
 
-Both yield similar closed-loop performance. The μ-analysis shows the H∞ controller is also not robust under the full uncertainty (μ_RS ≈ 7.38, μ_RP ≈ 20.04).
+Both yield similar closed-loop performance. The μ-analysis shows the H∞ controller is also not robust under the full uncertainty.
 
 <p align="center">
   <img src="figures/mu analisi Hinf.png" width="500" alt="μ-analysis H∞"/>
